@@ -81,7 +81,9 @@ def init(service_name: str) -> None:
     # Attach OTel handler to Python's root logger
     # This makes logger.info() etc flow to OTel
     handler = LoggingHandler(level=logging.DEBUG, logger_provider=logger_provider)
-    logging.getLogger().addHandler(handler)
+    root_logger = logging.getLogger()
+    root_logger.addHandler(handler)
+    root_logger.setLevel(logging.DEBUG)  # Allow all levels through to handlers
 
     _initialized = True
 
