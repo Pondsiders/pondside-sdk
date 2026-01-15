@@ -1,0 +1,15 @@
+[project]
+name = "pondside"
+version = "0.1.0"
+description = "Pondside SDK - shared utilities for the estate"
+requires-python = ">=3.11"
+dependencies = [
+    "opentelemetry-api",
+    "opentelemetry-sdk",
+    "opentelemetry-exporter-otlp-proto-http",
+    "opentelemetry-instrumentation-logging",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
