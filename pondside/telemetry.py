@@ -80,10 +80,23 @@ def init(service_name: str) -> None:
 
     # Attach OTel handler to Python's root logger
     # This makes logger.info() etc flow to OTel
-    handler = LoggingHandler(level=logging.DEBUG, logger_provider=logger_provider)
+    handler = LoggingHandler(level=logging.INFO, logger_provider=logger_provider)
     root_logger = logging.getLogger()
     root_logger.addHandler(handler)
-    root_logger.setLevel(logging.DEBUG)  # Allow all levels through to handlers
+    root_logger.setLevel(logging.INFO)  # INFO and above flow to handlers
+
+    # Silence noisy libraries that spam DEBUG logs
+    # These are infrastructure libraries whose debug output isn't useful
+    # and creates feedback loops (logging about logging)
+    for noisy_logger in [
+        "urllib3",           # HTTP connection pool debug
+        "httpx",             # HTTP client debug
+        "httpcore",          # HTTP core debug
+        "opentelemetry",     # OTel SDK internals
+        "watchfiles",        # File watcher debug
+        "asyncio",           # Event loop debug
+    ]:
+        logging.getLogger(noisy_logger).setLevel(logging.WARNING)
 
     _initialized = True
 
